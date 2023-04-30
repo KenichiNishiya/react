@@ -1,0 +1,29 @@
+component = js function that returns jsx, such as App()
+components needs to start with Captal Letter
+
+prop = js object that exists inside the argument of a component
+
+ternary operators = condition ? 1st statement : 2nd statement
+                    age < 18 ? console.log("Underage") : console.log("Overage")
+
+                    condition && statement
+                    isAlive && console.log("Continue")
+
+
+array:{
+forEach
+map
+filter
+reduce
+}
+
+callback function = passed as args to another function
+                    allows a function to call another function
+                    
+state = kind like a variable that holds data
+
+component lifecycle =
+- mounting (component appears on the website)
+- updating (component changes)
+- unmounting (component disappears from the website)
+We can use the useEffect hook to execute code on those lifecycle
