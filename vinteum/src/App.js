@@ -14,9 +14,6 @@ import './App.css';
 import {useState} from 'react';
 import {useEffect} from 'react';
 
-// let primeiraCarta = 0;
-// let segundaCarta = 0;
-
 function App() {
 const [emJogo,setEmJogo] = useState(false);
 
@@ -30,6 +27,12 @@ const [somaCartasDealer,setSomaCartasDealer] = useState(0);
 
 const [resultado,setResultado] = useState("");
 
+    useEffect(() =>{
+        console.log("soma",somaCartas);
+        console.log("dealer",somaCartasDealer);
+        // setSomaCartas(somaCartas);
+        // setSomaCartasDealer(somaCartasDealer);
+    },[somaCartas,somaCartasDealer]);
 
     const iniciarPartida = () =>{
         setPrimeiraCarta(randomCard());
@@ -39,11 +42,8 @@ const [resultado,setResultado] = useState("");
         setSegundaCartaDealer(randomCard());
 
         setEmJogo(true);
-        setSomaCartas(primeiraCarta+segundaCarta);
-        setSomaCartasDealer(primeiraCartaDealer+segundaCartaDealer);
-        // somarCartas();
+        somarCartas();
     }
-
 
     const finalizar = () =>{
         somarCartas();
@@ -64,27 +64,16 @@ const [resultado,setResultado] = useState("");
 
     const somarCartas = () =>{
         // soma nao recebe valor
-        // somente depois de apertsetCount(count+1);ar 2 vezes ele pega o valor
+        // somente depois de apertar 2 vezes ele pega o valor
         // mas e o valor anterior
-        let newSomaCartas = {...somaCartas};
-        let newSomaCartasDealer = {...somaCartasDealer};
-        newSomaCartas = primeiraCarta+segundaCarta ;
-        newSomaCartasDealer = primeiraCarta+segundaCarta ;
-        setSomaCartas(newSomaCartas);
-        setSomaCartasDealer(newSomaCartasDealer);
+        setSomaCartas(primeiraCarta+segundaCarta);
+        setSomaCartasDealer(primeiraCartaDealer+segundaCartaDealer);
     }
 
 const [tem21,setTem21] = useState(false);
 const somaTem21 = () =>{
     setTem21(true);
 }
-
-    useEffect(() =>{
-        console.log("soma",somaCartas);
-        console.log("dealer",somaCartasDealer);
-        setSomaCartas(somaCartas);
-        setSomaCartasDealer(somaCartasDealer);
-    },[somaCartas,somaCartasDealer]);
 
   return (
     <div className="App">
