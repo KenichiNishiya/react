@@ -17,92 +17,135 @@ import {useEffect} from 'react';
 function App() {
 const [emJogo,setEmJogo] = useState(false);
 
-const [primeiraCarta,setPrimeiraCarta] = useState(0);
-const [segundaCarta,setSegundaCarta] = useState(0);
-const [somaCartas,setSomaCartas] = useState(0);
+// const [primeiraCarta,setPrimeiraCarta] = useState(0);
+// const [segundaCarta,setSegundaCarta] = useState(0);
+// const [somaCartas,setSomaCartas] = useState(0);
+const [cartas,setCartas] = useState([]);
+const [somaArray,setSomaArray] = useState(0)
 
-const [primeiraCartaDealer,setPrimeiraCartaDealer] = useState(0);
-const [segundaCartaDealer,setSegundaCartaDealer] = useState(0);
-const [somaCartasDealer,setSomaCartasDealer] = useState(0);
+// const [primeiraCartaDealer,setPrimeiraCartaDealer] = useState(0);
+// const [segundaCartaDealer,setSegundaCartaDealer] = useState(0);
+// const [somaCartasDealer,setSomaCartasDealer] = useState(0);
+const [cartasDealer,setCartasDealer] = useState([]);
+const [somaArrayDealer,setSomaArrayDealer] = useState(0)
 
 const [resultado,setResultado] = useState("");
 
     useEffect(() =>{
-        console.log("soma",somaCartas);
-        console.log("dealer",somaCartasDealer);
-        // setSomaCartas(somaCartas);
-        // setSomaCartasDealer(somaCartasDealer);
-    },[somaCartas,somaCartasDealer]);
+        console.log("CHANGED")
+        console.log("Suas cartas hook",cartas)
+        console.log("Resultado",resultado)
+        setCartas(cartas);
+        setCartasDealer(cartasDealer);
+        setResultado(resultado);
+        setSomaArray(somaArray);
+    },[cartas,cartasDealer,resultado,somaArray]);
 
     const iniciarPartida = () =>{
-        setPrimeiraCarta(randomCard());
-        setSegundaCarta(randomCard());
+        setCartas([randomCard(),randomCard()])
+        setCartasDealer([randomCard(),randomCard()])
+        // setPrimeiraCarta(randomCard());
+        // setSegundaCarta(randomCard());
+        // console.log("cartas:",cartas)
         
-        setPrimeiraCartaDealer(randomCard());
-        setSegundaCartaDealer(randomCard());
+        // setPrimeiraCartaDealer(randomCard());
+        // setSegundaCartaDealer(randomCard());
 
         setEmJogo(true);
-        somarCartas();
+        setResultado("");
+        // somarCartas();
     }
 
     const finalizar = () =>{
-        somarCartas();
-        console.log("finalizar function",somaCartas,somaCartasDealer)
+        // somarCartas();
+        // console.log("finalizar function",somaCartas,somaCartasDealer)
         compararSomas();
+    }
+
+
+    const pegarCarta = () =>{
+        let novaCarta = randomCard();
+        console.log("novaCarta:",novaCarta)
+        let novaArray = [...cartas,novaCarta];
+        setCartas(novaArray);
+        console.log("novaArray:",novaArray)
+        
+        let somaArrayTemp = 0
+
+        for(let i=0;i<cartas.length;i++){
+            somaArrayTemp += cartas[i];
+        }
+        console.log("AASDDSA",somaArray);
+        setSomaArray(somaArrayTemp);
+        console.log("somaarrayda",somaArray)
+
     }
 
     const compararSomas = () =>{
         // As somas ficam = 0
-        if(somaCartasDealer > somaCartas){
-            console.log(somaCartasDealer,somaCartas,"perdeu");
+        let somaArray = 0
+        let somaArrayDealer = 0
+        for(let i=0;i<cartas.length;i++){
+            somaArray += cartas[i];
+
+        }
+
+        for(let i=0;i<cartasDealer.length;i++){
+            somaArrayDealer += cartasDealer[i];
+        }
+        console.log("novo soma array dealer",somaArrayDealer)
+        // let soma=primeiraCarta+segundaCarta;
+        // let somaDealer=primeiraCartaDealer+segundaCartaDealer;
+
+        if(somaArray < 21){
+            if(somaArray>=somaArrayDealer){
+                setResultado("Ganhou")
+            }
+            else{
+                setResultado("Perdeu")
+            }
+        }
+        else if(somaArray === 21 && somaArrayDealer < somaArray){
+            setResultado("VINTE UM")
+        }
+        else if(somaArray === 21 && somaArrayDealer === 21){
+            setResultado("Empate");
         }
         else{
-            console.log(somaCartasDealer,somaCartas,"ganhou");
+            setResultado("Perdeu, ultrapassou 21")
         }
-
+        console.log("Comparar")
     }
 
-    const somarCartas = () =>{
+    // const somarCartas = () =>{
         // soma nao recebe valor
         // somente depois de apertar 2 vezes ele pega o valor
         // mas e o valor anterior
-        setSomaCartas(primeiraCarta+segundaCarta);
-        setSomaCartasDealer(primeiraCartaDealer+segundaCartaDealer);
-    }
-
-const [tem21,setTem21] = useState(false);
-const somaTem21 = () =>{
-    setTem21(true);
-}
+        // setSomaCartas(primeiraCarta+segundaCarta);
+        // setSomaCartasDealer(primeiraCartaDealer+segundaCartaDealer);
+    // }
 
   return (
     <div className="App">
       {emJogo && console.log("em jogo")}
-      {tem21 && console.log("tem o 21")}
       <button onClick={iniciarPartida}>Iniciar jogo</button>
       <button onClick={finalizar}>Finalizar</button>
-      <button onClick={somaTem21}>21 instantaneo</button>
+      <button onClick={pegarCarta}>Pegar mais uma carta</button>
       <br/>
-      <CartasJogador primeira={primeiraCarta} segunda={segundaCarta}/>
-      <p>{somaCartas}</p>
-      <CartasDealer primeira={primeiraCartaDealer} segunda={segundaCartaDealer} />
-      <p>{somaCartasDealer}</p>
-      {somaCartas > somaCartasDealer ?? <p>{resultado}</p>}
+      <CartasJogador cartas={cartas}/>
       <br/>
+      <CartasDealer primeira={cartasDealer[0]} segunda={cartasDealer[1]} />
+      <br/>
+      {resultado !== "" && <p>{resultado}</p>}
     </div>
   );
 
 }
 
-// const Jogador = () =>{
-//     let jogador = [primeiraCarta,segundaCarta]
-//     return jogador[0] + " " + jogador[1];
-// }
-
 const CartasJogador = (props) => {
     return(
         <div>
-        <p>Suas cartas: {props.primeira} e {props.segunda}</p>
+        <p>Suas Cartas: {props.cartas.join(" ")}</p>
         </div>
     );
 };
@@ -110,7 +153,7 @@ const CartasJogador = (props) => {
 const CartasDealer = (props) => {
     return(
         <div>
-        <p>Cartas do dealer: {props.primeira} e {props.segunda}</p>
+        <p>Cartas do dealer: {props.primeira} {props.segunda}</p>
         </div>
     );
 };
