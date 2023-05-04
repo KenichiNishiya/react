@@ -30,16 +30,21 @@ const [cartasDealer,setCartasDealer] = useState([]);
 const [somaArrayDealer,setSomaArrayDealer] = useState(0)
 
 const [resultado,setResultado] = useState("");
+const [final,setFinal] = useState(false);
 
     useEffect(() =>{
         console.log("CHANGED")
-        console.log("Suas cartas hook",cartas)
-        console.log("Resultado",resultado)
+        // console.log("Suas cartas hook",cartas)
+        // console.log("Resultado",resultado)
         setCartas(cartas);
         setCartasDealer(cartasDealer);
         setResultado(resultado);
-        setSomaArray(somaArray);
-    },[cartas,cartasDealer,resultado,somaArray]);
+        setSomaArray(cartas.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
+        // setSomaArray(somaArray);
+        setFinal(final)
+        console.log("final",final);
+        console.log("resultado",resultado);
+    },[cartas,cartasDealer,resultado,somaArray,final]);
 
     const iniciarPartida = () =>{
         setCartas([randomCard(),randomCard()])
@@ -59,25 +64,26 @@ const [resultado,setResultado] = useState("");
     const finalizar = () =>{
         // somarCartas();
         // console.log("finalizar function",somaCartas,somaCartasDealer)
+        setFinal(true);
         compararSomas();
     }
 
 
     const pegarCarta = () =>{
         let novaCarta = randomCard();
-        console.log("novaCarta:",novaCarta)
+        // console.log("novaCarta:",novaCarta)
         let novaArray = [...cartas,novaCarta];
         setCartas(novaArray);
-        console.log("novaArray:",novaArray)
+        // console.log("novaArray:",novaArray)
         
         let somaArrayTemp = 0
 
         for(let i=0;i<cartas.length;i++){
             somaArrayTemp += cartas[i];
         }
-        console.log("AASDDSA",somaArray);
-        setSomaArray(somaArrayTemp);
-        console.log("somaarrayda",somaArray)
+        // console.log("AASDDSA",somaArrayTemp);
+        // setSomaArray(somaArrayTemp);
+        // console.log("somaarrayda",somaArray)
 
     }
 
@@ -93,28 +99,30 @@ const [resultado,setResultado] = useState("");
         for(let i=0;i<cartasDealer.length;i++){
             somaArrayDealer += cartasDealer[i];
         }
-        console.log("novo soma array dealer",somaArrayDealer)
+        // console.log("novo soma array dealer",somaArrayDealer)
         // let soma=primeiraCarta+segundaCarta;
         // let somaDealer=primeiraCartaDealer+segundaCartaDealer;
 
-        if(somaArray < 21){
-            if(somaArray>=somaArrayDealer){
-                setResultado("Ganhou")
+        if(final === true){
+            if(somaArray < 21){
+                if(somaArray>somaArrayDealer){
+                    setResultado("Ganhou")
+                }
+                else{
+                    setResultado("Perdeu")
+                }
             }
-            else{
-                setResultado("Perdeu")
+            else if(somaArray === 21 && somaArrayDealer < somaArray){
+                setResultado("VINTE UM")
+            }
+            else if(somaArray === 21 && somaArrayDealer === 21){
+                setResultado("Empate");
             }
         }
-        else if(somaArray === 21 && somaArrayDealer < somaArray){
-            setResultado("VINTE UM")
-        }
-        else if(somaArray === 21 && somaArrayDealer === 21){
-            setResultado("Empate");
-        }
-        else{
+        if(final === false && somaArray > 21){
             setResultado("Perdeu, ultrapassou 21")
         }
-        console.log("Comparar")
+        // console.log("Comparar")
     }
 
     // const somarCartas = () =>{
@@ -127,7 +135,6 @@ const [resultado,setResultado] = useState("");
 
   return (
     <div className="App">
-      {emJogo && console.log("em jogo")}
       <button onClick={iniciarPartida}>Iniciar jogo</button>
       <button onClick={finalizar}>Finalizar</button>
       <button onClick={pegarCarta}>Pegar mais uma carta</button>
