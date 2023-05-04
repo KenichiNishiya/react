@@ -18,10 +18,6 @@ function App() {
     }, [cartas,cartasDealer]);
 
     useEffect(()=>{
-        setResultado(resultado);
-    },[resultado])
-
-    useEffect(()=>{
         compararSomas();
     },[soma,somaDealer])
       // useEffect(() => {
