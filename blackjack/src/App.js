@@ -1,5 +1,12 @@
 import { useState,useEffect } from 'react';
 import './App.css';
+
+// TODO
+// Esconder os valores das cartas antes de apertar o botao de start pela primeira vez
+// Implementar sistema de apostas
+// Estilizar a pagina
+// Implementar 1 = 11 dependendo da situacao
+// Colocar as letras respectivas (JQK)
  
 function App() {
    
@@ -20,13 +27,12 @@ function App() {
     useEffect(()=>{
         compararSomas();
     },[soma,somaDealer])
-      // useEffect(() => {
-      //   setResultado(sum);
-      // }, [sum]);
 
     function pegarNovaCarta(){
-        setCartas([...cartas,randomCard()])
+        if(!fim){
+        setCartas([...cartas,novaCarta()])
         compararSomas();
+        }
     }
 
     function compararSomas(){
@@ -36,6 +42,7 @@ function App() {
         }
         else if(soma === 21 && somaDealer !== 21){
             setResultado("Venceu")
+            setFim(true);
         }
         else if(soma === 21 && somaDealer === 21){
             setResultado("Empate")
@@ -51,18 +58,20 @@ function App() {
 
     function iniciarPartida() {
         setFim(false)
-        const cartasIniciais = [randomCard(),randomCard()];
-        const cartasIniciaisDealer = [randomCard(),randomCard()];
+        const cartasIniciais = [novaCarta(),novaCarta()];
+        const cartasIniciaisDealer = [novaCarta(),novaCarta()];
         setCartas(cartasIniciais);
         setCartasDealer(cartasIniciaisDealer);
 
     }
 
     function finalizarPartida(){
+        if(!fim){
         setFim(true)
+        }
     }
 
-    function randomCard(){
+    function novaCarta(){
         let random = Math.floor(Math.random() * 13) + 1
         if (random > 10){
             return 10
@@ -77,16 +86,39 @@ function App() {
 
     return (
       <div>
-        <p>Cartas: {cartas.join(', ')}</p>
-        <p>Soma: {soma}</p>
+        <Jogador cartas={cartas} soma={soma}/>
         <br/>
-        <p>Cartas Dealer: {cartasDealer.join(', ')}</p>
-        <p>Soma Dealer: {somaDealer}</p>
+        <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
         <button onClick={iniciarPartida}>Iniciar Partida</button>
         <button onClick={pegarNovaCarta}>Pegar carta</button>
         <button onClick={finalizarPartida}>Finalizar partida</button>
         {fim && <p>Resultado: {resultado}</p>}
       </div>
     );
+}
+
+const Jogador = (props) =>{
+    return(
+        <div>
+            <p>Cartas: {props.cartas.join(", ")}</p>
+            <p>Soma: {props.soma}</p>
+        </div>
+    )
+}
+
+const Dealer = (props) =>{
+    return(
+        <div>
+        {props.fim ? 
+            <div>
+            <p>Cartas Dealer: {props.cartasDealer.join(", ")}</p>
+            <p>Soma Dealer: {props.somaDealer}</p>
+            </div>
+            :
+            <p>Cartas Dealer: {props.cartasDealer[0]}, ?</p>
+        }
+            
+        </div>
+    )
 }
 export default App;
