@@ -119,11 +119,11 @@ function App() {
             }
         }
         //fim fica false o tempo todo, 
-        else if(soma < somaDealer){
+            //Perdeu mas ta devolvendo as fichas
+        else if(soma < somaDealer || soma === somaDealer){
             setResultado("Perdeu, soma menor")
         console.log("aposta",aposta,"novaAposta",novaAposta)
         console.log("assdkjkjkisf")
-            // console.log("Perdeu acho q por soma menor")
             // setAposta(0);
         }
     }
@@ -140,6 +140,7 @@ function App() {
 
     function iniciarPartida() {
         // console.log("Fichas inicio",fichasJogador)
+        if(aposta > 0){
         console.log("aposta",aposta,"novaAposta",novaAposta)
         setFim(false);
         const cartasIniciais = [novaCarta(),novaCarta()];
@@ -148,6 +149,8 @@ function App() {
         setCartasDealer(cartasIniciaisDealer);
         setFichasJogador((fichasJogador)=>fichasJogador - aposta);
         // setAposta(0);
+
+        }
     }
 
     function finalizarPartida(){
@@ -182,15 +185,19 @@ function App() {
 
     return (
       <div>
+        <p>Você incia com 200 fichas, clique nos botoes abaixo para colocar sua aposta, em seguida, clique "Iniciar Partida"</p>
+        <p>Quando estiver satisfeito com as cartas em sua mão, clique em "Finalizar partida" para comparar as somas</p>
+        <hr/>
         <Jogador cartas={cartas} soma={soma}/>
         <br/>
         <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
+        <br/>
         <p>Suas fichas: {fichasJogador}</p>
         <p>Sua aposta: {aposta}</p>
+        <hr/>
         <button onClick={()=>{apostar(5)}}>+5</button>
         <button onClick={()=>{apostar(10)}}>+10</button>
         <button onClick={()=>{apostar(50)}}>+50</button>
-        <button onClick={instawin}>Insta win por soma maior</button>
         <br/>
         <button onClick={()=>{apostar(-5)}}>-5</button>
         <button onClick={()=>{apostar(-10)}}>-10</button>
@@ -223,10 +230,14 @@ const Dealer = (props) =>{
             <p>Soma Dealer: {props.somaDealer}</p>
             </div>
             :
+            <div>
             <p>Cartas Dealer: {props.cartasDealer[0]}, ?</p>
+            <p>Soma Dealer: ?</p>
+            </div>
         }
             
         </div>
     )
 }
 export default App;
+
