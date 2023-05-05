@@ -19,6 +19,11 @@ function App() {
     const [resultado,setResultado] = useState("");
     const [fim,setFim] = useState(false);
 
+    const [fichasJogador,setFichasJogador] = useState(200);
+    const [aposta,setAposta] = useState(0);
+    const [novaAposta,setNovaAposta] = useState(0);
+    const [ganhos,setGanhos] = useState(0);
+
     useEffect(() => {
         setSoma(cartas.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
         setSomaDealer(cartasDealer.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
@@ -27,6 +32,33 @@ function App() {
     useEffect(()=>{
         compararSomas();
     },[soma,somaDealer])
+
+    useEffect(()=>{
+        console.log("ganhos:",ganhos);
+        setFichasJogador((fichasJogador)=>fichasJogador+ganhos);
+    },[ganhos]);
+
+    useEffect(()=>{
+        if(aposta < fichasJogador){
+            if(aposta + novaAposta < 0){
+                setAposta(0)
+            }
+            else{
+                // setFichasJogador((fichasJogador) => fichasJogador - aposta);
+                setAposta((aposta) => aposta + novaAposta);
+                setNovaAposta(0);
+            }
+        }
+        else{
+            if(novaAposta < 0){
+                setAposta((aposta) => aposta + novaAposta);
+                setNovaAposta(0);
+            }
+            else{
+                setAposta(fichasJogador);
+            }
+        }
+    },[novaAposta])
 
     function pegarNovaCarta(){
         if(!fim){
@@ -41,28 +73,43 @@ function App() {
             setFim(true);
         }
         else if(soma === 21 && somaDealer !== 21){
+            /*Aqui ta funcionando*/
             setResultado("Venceu")
+            // setFichasJogador((fichasJogador)=>fichasJogador + aposta*3);
+            setGanhos(aposta*3)
             setFim(true);
         }
         else if(soma === 21 && somaDealer === 21){
             setResultado("Empate")
+            // setFichasJogador((fichasJogador)=>fichasJogador + aposta);
+            setGanhos(aposta)
         }
         else if(soma > somaDealer){
             setResultado("Venceu")
+            console.log("venceu normal, fim",fim)
+            // aqui o fim ta como false mesmo apos apertar o botao de finalizar
+            // entao ele n vai pra baixo
+            // tem que fazer o fim atualizar sincronamente
+            if(fim){
+                // setFichasJogador((fichasJogador)=>fichasJogador + aposta*2);
+                setGanhos(aposta*2);
+                console.log("ganhou os ganhos:",ganhos)
+            }
         }
-        else{
+        //fim fica false o tempo todo, 
+        else {
             setResultado("Perdeu")
         }
-        console.log(soma,somaDealer)
     }
 
     function iniciarPartida() {
-        setFim(false)
+        setFim(false);
         const cartasIniciais = [novaCarta(),novaCarta()];
         const cartasIniciaisDealer = [novaCarta(),novaCarta()];
         setCartas(cartasIniciais);
         setCartasDealer(cartasIniciaisDealer);
-
+        setFichasJogador((fichasJogador)=>fichasJogador - aposta);
+        // setAposta(0);
     }
 
     function finalizarPartida(){
@@ -84,11 +131,26 @@ function App() {
         }
     }
 
+    function apostar(fichasAposta){
+        setNovaAposta(fichasAposta);
+    }
+
     return (
       <div>
         <Jogador cartas={cartas} soma={soma}/>
         <br/>
         <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
+        <p>Suas fichas: {fichasJogador}</p>
+        <p>Sua aposta: {aposta}</p>
+        <button onClick={()=>{apostar(5)}}>+5</button>
+        <button onClick={()=>{apostar(10)}}>+10</button>
+        <button onClick={()=>{apostar(50)}}>+50</button>
+        <br/>
+        <button onClick={()=>{apostar(-5)}}>-5</button>
+        <button onClick={()=>{apostar(-10)}}>-10</button>
+        <button onClick={()=>{apostar(-50)}}>-50</button>
+        <br/>
+        <br/>
         <button onClick={iniciarPartida}>Iniciar Partida</button>
         <button onClick={pegarNovaCarta}>Pegar carta</button>
         <button onClick={finalizarPartida}>Finalizar partida</button>
