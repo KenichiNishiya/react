@@ -6,8 +6,6 @@ import background from './bg.jpeg'
 // consertar 2 blackjack seguido o segundo nao vai
 
 document.body.style = "font-size:20px; font-weight: bold; color: white; text-align: center;    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;";
-// document.body.style = "font-size:20px; font-weight: bold;  background: darkgreen; color: white; text-align: center;    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;";
-
 
 function App() {
    
@@ -38,13 +36,8 @@ function App() {
             setSomaDealer(cartasDealer.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
         }
     },[soma,somaDealer])
-    //incluindo o fim acima, vencer maior soma funciona
-    // mas
-    //ganha blackjack duas vezes seguidas
-    //perde por ultrapassar 21 duas vezes seguidas
 
     useEffect(()=>{
-        // console.log("ganhos:",ganhos);
         setFichasJogador((fichasJogador)=>fichasJogador+ganhos);
         setAposta(0);
         setGanhos(0);
@@ -53,10 +46,9 @@ function App() {
     useEffect(()=>{
         if(aposta < fichasJogador){
             if(aposta + novaAposta < 0){
-                setAposta(0)
+                setAposta(0);
             }
             else{
-                // setFichasJogador((fichasJogador) => fichasJogador - aposta);
                 setAposta((aposta) => aposta + novaAposta);
                 setNovaAposta(0);
             }
@@ -70,102 +62,72 @@ function App() {
                 setAposta(fichasJogador);
             }
         }
-        console.log(aposta)
     },[novaAposta])
-
-    // useEffect(()=>{
-    //       console.log("fichas depois aposta",fichasJogador)
-    // },[fichasJogador])
 
     function pegarNovaCarta(){
         if(!fim && cartas[0] !== 0){
-        setCartas([...cartas,novaCarta()])
+        setCartas([...cartas,novaCarta()]);
         compararSomas();
         }
     }
 
     function compararSomas(){
-        if(soma > 21 /*&& fim*/){
-            setResultado("Perdeu")
-            // console.log("perdeu, maior que 21")
-            // console.log("soma:",soma)
-            // console.log("cartas:",cartas)
+        if(soma > 21){
+            setResultado("Perdeu");
             setAposta(0);
             setFim(true);
             setApostou(false);
         }
-        // else if(soma > 21 && !fim ){
-        //     setFim(true);
 
-        // }
         else if(soma === 21 && somaDealer !== 21){
-            /*Aqui ta funcionando*/
-            setResultado("Blackjack!")
-            // console.log("venceu, blackjack")
-            // setFichasJogador((fichasJogador)=>fichasJogador + aposta*3);
-            setGanhos(aposta*3)
+            setResultado("Blackjack!");
+            setGanhos(aposta*3);
             setFim(true);
             setApostou(false);
         }
         else if(soma === 21 && somaDealer === 21){
-            setResultado("Empate")
-            setFim(true)
-            // setFichasJogador((fichasJogador)=>fichasJogador + aposta);
-            setGanhos(aposta)
+            setResultado("Empate");
+            setFim(true);
+            setGanhos(aposta);
             setApostou(false);
         }
         else if(soma > somaDealer || somaDealer > 21){
-            setResultado("Venceu")
-            // console.log("venceu,soma maior fim:",fim)
-            // aqui o fim ta como false mesmo apos apertar o botao de finalizar
-            // entao ele n vai pra baixo
-            // tem que fazer o fim atualizar sincronamente
+            setResultado("Venceu");
             if(fim){
-                // setFichasJogador((fichasJogador)=>fichasJogador + aposta*2);
-                // console.log("soma maior, fim positivo, ganhos:",ganhos)
                 setGanhos(aposta*2);
-            setApostou(false);
-                // console.log("ganhou os ganhos:",ganhos)
+                setApostou(false);
             }
         }
-        //fim fica false o tempo todo, 
-            //Perdeu mas ta devolvendo as fichas
         else if(soma < somaDealer || soma === somaDealer){
-            setResultado("Perdeu ")
-        console.log("aposta",aposta,"novaAposta",novaAposta)
-        console.log("assdkjkjkisf")
-            // setAposta(0);
+            setResultado("Perdeu ");
         }
     }
 
-    // necessario para fornecer os ganhos de uma win normal
     useEffect(()=>{
         if(resultado === "Venceu" && fim){
             setGanhos(aposta*2);
-        console.log("Venceu ganhos update normal")
         }
         else if(resultado === "Perdeu " && fim)
             setAposta(0);
     },[resultado,fim])
 
     function iniciarPartida() {
-        // console.log("Fichas inicio",fichasJogador)
         if(aposta > 0){
-        console.log("aposta",aposta,"novaAposta",novaAposta)
-        setApostou(true);
-        setFim(false);
-        const cartasIniciais = [novaCarta(),novaCarta()];
-        const cartasIniciaisDealer = [novaCarta(),novaCarta()];
-        setCartas(cartasIniciais);
-        setCartasDealer(cartasIniciaisDealer);
-        setFichasJogador((fichasJogador)=>fichasJogador - aposta);
-        // setAposta(0);
-
+            setApostou(true);
+            setFim(false);
+            const cartasIniciais = [novaCarta(),novaCarta()];
+            const cartasIniciaisDealer = [novaCarta(),novaCarta()];
+            setCartas(cartasIniciais);
+            setCartasDealer(cartasIniciaisDealer);
+            setFichasJogador((fichasJogador)=>fichasJogador - aposta);
         }
     }
 
     function finalizarPartida(){
-        setFim(true)
+        if(!fim && cartas[0] !== 0){
+            setFim(true)
+            setApostou(false)
+        }
     }
 
     function novaCarta(){
@@ -184,90 +146,75 @@ function App() {
     function apostar(fichasAposta){
         if(!apostou){
         setNovaAposta(fichasAposta);
-        console.log("apostar",fichasAposta)
         }
     }
 
-
-    // useEffect(()=>{
-        
-    // })
-
     return (
-      <div className='appDiv' style={{backgroundImage: `url(${background})`,
-                backgroundRepeat: "no-repeat",
-              backgroundPosition:"center",
-                backgroundSize: "cover",
-                height: "100vh",
-                
-    }}>
-        <h1 className='h1'>Blackjack</h1>
-        <br/>
+        <div className='appDiv' style={{
+            backgroundImage: `url(${background})`,
+            backgroundRepeat: "no-repeat",
+            backgroundPosition:"center",
+            backgroundSize: "cover",
+            height: "100vh",
+        }}>
+            <h1 className='h1'>Blackjack</h1>
+            <br/>
+            <div className='wrapper'>
+                <Jogador cartas={cartas} soma={soma}/>
+                {fim && <p className='res'>{resultado}</p>}
+                <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
+            </div>
 
-        <div className='wrapper'>
-            <Jogador cartas={cartas} soma={soma}/>
-            {fim && <p className='res'>{resultado}</p>}
-            <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
-        </div>
+            <div id='divStats'>
+                <p className='p'>Sua aposta: {aposta}</p>
+                <p className='p'>Suas fichas: {fichasJogador}</p>
+            </div>
 
-
-        <div id='divStats'>
-            <p className='p'>Sua aposta: {aposta}</p>
-            <p className='p'>Suas fichas: {fichasJogador}</p>
-        </div>
-
-        <div className='divAposta'>
-            <button className='buttonAposta' onClick={()=>{apostar(5)}}>+5</button>
-            <button className='buttonAposta' onClick={()=>{apostar(10)}}>+10</button>
-            <button className='buttonAposta' onClick={()=>{apostar(50)}}>+50</button>
-            <button className='buttonAposta' onClick={()=>{apostar(-5)}}>-5</button>
-            <button className='buttonAposta' onClick={()=>{apostar(-10)}}>-10</button>
-            <button className='buttonAposta' onClick={()=>{apostar(-50)}}>-50</button>
-        </div>
-
-        <br/>
-
-        <div className='divButton'>
-            <button className='button' onClick={iniciarPartida}>Iniciar</button>
-            <button className='button' onClick={pegarNovaCarta}>Pegar carta</button>
-            <button className='button' onClick={()=>{!fim && cartas[0] !== 0 && 
-                    setFim(true)
-                setApostou(false)
-            }}>Finalizar</button>
-        </div>
-      </div>
+            <div className='divAposta'>
+                <button className='buttonAposta' onClick={()=>{apostar(5)}}>+5</button>
+                <button className='buttonAposta' onClick={()=>{apostar(10)}}>+10</button>
+                <button className='buttonAposta' onClick={()=>{apostar(50)}}>+50</button>
+                <button className='buttonAposta' onClick={()=>{apostar(-5)}}>-5</button>
+                <button className='buttonAposta' onClick={()=>{apostar(-10)}}>-10</button>
+                <button className='buttonAposta' onClick={()=>{apostar(-50)}}>-50</button>
+            </div>
+            <br/>
+            <div className='divButton'>
+                <button className='button' onClick={iniciarPartida}>Iniciar</button>
+                <button className='button' onClick={pegarNovaCarta}>Pegar carta</button>
+                <button className='button' onClick={finalizarPartida}>Finalizar</button>
+            </div>
+       </div>
     );
 }
 
-const Jogador = (props) =>{
-    return(
-        <div className='jogador'>
-            <h1>Jogador</h1>
-            <p className='p'>Cartas: {props.cartas.join(", ")}</p>
-            <p className='p'>Soma: {props.soma}</p>
-        </div>
-    )
-}
-
-const Dealer = (props) =>{
-    return(
-        <div className='dealer'>
-        {props.fim ? 
-            <div>
-            <h1>Dealer</h1>
-            <p className='p'>Cartas: {props.cartasDealer.join(", ")}</p>
-            <p className='p'>Soma: {props.somaDealer}</p>
+    const Jogador = (props) =>{
+        return(
+            <div className='jogador'>
+                <h1>Jogador</h1>
+                <p className='p'>Cartas: {props.cartas.join(", ")}</p>
+                <p className='p'>Soma: {props.soma}</p>
             </div>
-            :
-            <div>
-            <h1>Dealer</h1>
-            <p className='p'>Cartas: {props.cartasDealer[0]}, ?</p>
-            <p className='p'>Soma: ?</p>
-            </div>
-        }
-            
-        </div>
-    )
-}
-export default App;
+        )
+    }
 
+    const Dealer = (props) =>{
+        return(
+            <div className='dealer'>
+            {props.fim ? 
+                <div>
+                <h1>Dealer</h1>
+                <p className='p'>Cartas: {props.cartasDealer.join(", ")}</p>
+                <p className='p'>Soma: {props.somaDealer}</p>
+                </div>
+                :
+                <div>
+                <h1>Dealer</h1>
+                <p className='p'>Cartas: {props.cartasDealer[0]}, ?</p>
+                <p className='p'>Soma: ?</p>
+                </div>
+            }
+            </div>
+        )
+    }
+    export default App;
