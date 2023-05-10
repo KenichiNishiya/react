@@ -1,15 +1,14 @@
 import { useState,useEffect } from 'react';
 import './App.css';
+import background from './bg.jpeg'
 
 // TODO
-// Consertar venceu por maior carta nao ta dando a aposta (fim = false)
+// consertar 2 blackjack seguido o segundo nao vai
 
-// Esconder os valores das cartas antes de apertar o botao de start pela primeira vez
-// Implementar sistema de apostas
-// Estilizar a pagina
-// Implementar 1 = 11 dependendo da situacao
-// Colocar as letras respectivas (JQK)
- 
+document.body.style = "font-size:20px; font-weight: bold; color: white; text-align: center;    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;";
+// document.body.style = "font-size:20px; font-weight: bold;  background: darkgreen; color: white; text-align: center;    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;";
+
+
 function App() {
    
     const [cartas, setCartas] = useState([0, 0]);
@@ -19,6 +18,7 @@ function App() {
     const [somaDealer,setSomaDealer] = useState(0);
 
     const [resultado,setResultado] = useState("");
+    const [apostou, setApostou] = useState(false);
     const [fim,setFim] = useState(false);
 
     const [fichasJogador,setFichasJogador] = useState(200);
@@ -66,6 +66,7 @@ function App() {
                 setAposta(fichasJogador);
             }
         }
+        console.log(aposta)
     },[novaAposta])
 
     // useEffect(()=>{
@@ -73,7 +74,7 @@ function App() {
     // },[fichasJogador])
 
     function pegarNovaCarta(){
-        if(!fim){
+        if(!fim && cartas[0] !== 0){
         setCartas([...cartas,novaCarta()])
         compararSomas();
         }
@@ -87,6 +88,7 @@ function App() {
             // console.log("cartas:",cartas)
             setAposta(0);
             setFim(true);
+            setApostou(false);
         }
         // else if(soma > 21 && !fim ){
         //     setFim(true);
@@ -99,11 +101,13 @@ function App() {
             // setFichasJogador((fichasJogador)=>fichasJogador + aposta*3);
             setGanhos(aposta*3)
             setFim(true);
+            setApostou(false);
         }
         else if(soma === 21 && somaDealer === 21){
             setResultado("Empate")
             // setFichasJogador((fichasJogador)=>fichasJogador + aposta);
             setGanhos(aposta)
+            setApostou(false);
         }
         else if(soma > somaDealer){
             setResultado("Venceu")
@@ -115,13 +119,14 @@ function App() {
                 // setFichasJogador((fichasJogador)=>fichasJogador + aposta*2);
                 // console.log("soma maior, fim positivo, ganhos:",ganhos)
                 setGanhos(aposta*2);
+            setApostou(false);
                 // console.log("ganhou os ganhos:",ganhos)
             }
         }
         //fim fica false o tempo todo, 
             //Perdeu mas ta devolvendo as fichas
         else if(soma < somaDealer || soma === somaDealer){
-            setResultado("Perdeu, soma menor")
+            setResultado("Perdeu ")
         console.log("aposta",aposta,"novaAposta",novaAposta)
         console.log("assdkjkjkisf")
             // setAposta(0);
@@ -134,7 +139,7 @@ function App() {
             setGanhos(aposta*2);
         console.log("Venceu ganhos update normal")
         }
-        else if(resultado === "Perdeu, soma menor" && fim)
+        else if(resultado === "Perdeu " && fim)
             setAposta(0);
     },[resultado,fim])
 
@@ -142,6 +147,7 @@ function App() {
         // console.log("Fichas inicio",fichasJogador)
         if(aposta > 0){
         console.log("aposta",aposta,"novaAposta",novaAposta)
+        setApostou(true);
         setFim(false);
         const cartasIniciais = [novaCarta(),novaCarta()];
         const cartasIniciaisDealer = [novaCarta(),novaCarta()];
@@ -171,50 +177,69 @@ function App() {
     }
 
     function apostar(fichasAposta){
+        if(!apostou){
         setNovaAposta(fichasAposta);
+        console.log("apostar",fichasAposta)
+        }
     }
 
-    function instawin(){
-        setSoma(20);
-        setSomaDealer(1);
-    }
 
     // useEffect(()=>{
         
     // })
 
     return (
-      <div>
-        <p>Você incia com 200 fichas, clique nos botoes abaixo para colocar sua aposta, em seguida, clique "Iniciar Partida"</p>
-        <p>Quando estiver satisfeito com as cartas em sua mão, clique em "Finalizar partida" para comparar as somas</p>
-        <hr/>
-        <Jogador cartas={cartas} soma={soma}/>
+      <div style={{backgroundImage: `url(${background})`,
+                backgroundRepeat: "no-repeat",
+              backgroundPosition:"center",
+                backgroundSize: "cover",
+                height: "100vh",
+                
+    }}>
+        <h1 className='h1'>Blackjack</h1>
         <br/>
-        <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
+
+        <div className='wrapper'>
+            <Jogador cartas={cartas} soma={soma}/>
+            {fim && <p className='res'>{resultado}</p>}
+            <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
+        </div>
+
         <br/>
-        <p>Suas fichas: {fichasJogador}</p>
+
         <p>Sua aposta: {aposta}</p>
-        <hr/>
-        <button onClick={()=>{apostar(5)}}>+5</button>
-        <button onClick={()=>{apostar(10)}}>+10</button>
-        <button onClick={()=>{apostar(50)}}>+50</button>
+        <p>Suas fichas: {fichasJogador}</p>
+
+        <div className='divAposta'>
+            <button className='buttonAposta' onClick={()=>{apostar(5)}}>+5</button>
+            <button className='buttonAposta' onClick={()=>{apostar(10)}}>+10</button>
+            <button className='buttonAposta' onClick={()=>{apostar(50)}}>+50</button>
         <br/>
-        <button onClick={()=>{apostar(-5)}}>-5</button>
-        <button onClick={()=>{apostar(-10)}}>-10</button>
-        <button onClick={()=>{apostar(-50)}}>-50</button>
+            <button className='buttonAposta' onClick={()=>{apostar(-5)}}>-5</button>
+            <button className='buttonAposta' onClick={()=>{apostar(-10)}}>-10</button>
+            <button className='buttonAposta' onClick={()=>{apostar(-50)}}>-50</button>
+        </div>
+
         <br/>
         <br/>
-        <button onClick={iniciarPartida}>Iniciar Partida</button>
-        <button onClick={pegarNovaCarta}>Pegar carta</button>
-        <button onClick={()=>{setFim(true)}}>Finalizar partida</button>
-        {fim && <p>Resultado: {resultado}</p>}
+
+        <div className='divButton'>
+            <button className='button' onClick={iniciarPartida}>Iniciar</button>
+            <button className='button' onClick={pegarNovaCarta}>Pegar carta</button>
+            <button className='button' onClick={()=>{!fim && cartas[0] !== 0 && 
+                    setFim(true)
+                setApostou(false)
+            }}>Finalizar</button>
+        </div>
+
       </div>
     );
 }
 
 const Jogador = (props) =>{
     return(
-        <div>
+        <div className='jogador'>
+            <h1>Jogador</h1>
             <p>Cartas: {props.cartas.join(", ")}</p>
             <p>Soma: {props.soma}</p>
         </div>
@@ -223,16 +248,18 @@ const Jogador = (props) =>{
 
 const Dealer = (props) =>{
     return(
-        <div>
+        <div className='dealer'>
         {props.fim ? 
             <div>
-            <p>Cartas Dealer: {props.cartasDealer.join(", ")}</p>
-            <p>Soma Dealer: {props.somaDealer}</p>
+            <h1>Dealer</h1>
+            <p>Cartas: {props.cartasDealer.join(", ")}</p>
+            <p>Soma: {props.somaDealer}</p>
             </div>
             :
             <div>
-            <p>Cartas Dealer: {props.cartasDealer[0]}, ?</p>
-            <p>Soma Dealer: ?</p>
+            <h1>Dealer</h1>
+            <p>Cartas: {props.cartasDealer[0]}, ?</p>
+            <p>Soma: ?</p>
             </div>
         }
             
