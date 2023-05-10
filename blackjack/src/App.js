@@ -5,30 +5,38 @@ import background from './bg.jpeg'
 // TODO
 // consertar 2 blackjack seguido o segundo nao vai
 
+// Setting some css for the whole page directly with js
 document.body.style = "font-size:20px; font-weight: bold; color: white; text-align: center;    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;";
 
 function App() {
    
+    // Player 
     const [cartas, setCartas] = useState([0, 0]);
     const [soma,setSoma] = useState(0);
 
+    // Dealer
     const [cartasDealer, setCartasDealer] = useState([0, 0]);
     const [somaDealer,setSomaDealer] = useState(0);
 
+    // Game state
     const [resultado,setResultado] = useState("");
     const [apostou, setApostou] = useState(false);
     const [fim,setFim] = useState(false);
 
+    // Betting system
     const [fichasJogador,setFichasJogador] = useState(100);
     const [aposta,setAposta] = useState(0);
     const [novaAposta,setNovaAposta] = useState(0);
     const [ganhos,setGanhos] = useState(0);
 
+    // When the cards are updated, the sums is also updated
     useEffect(() => {
         setSoma(cartas.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
         setSomaDealer(cartasDealer.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
     }, [cartas,cartasDealer]);
 
+    // When the sums are updated, they are compared
+    // If the dealer's sum is less than 17, it buys more cards until it's 17 or over
     useEffect(()=>{
         compararSomas();
         if(somaDealer < 17){
@@ -37,12 +45,15 @@ function App() {
         }
     },[soma,somaDealer])
 
+    // Whenever the player wins something, it receives the chips and resets some states
     useEffect(()=>{
         setFichasJogador((fichasJogador)=>fichasJogador+ganhos);
         setAposta(0);
         setGanhos(0);
     },[ganhos]);
 
+    // Checks if the value the player wants to bet makes sense
+    // Don't let the player bet more than they have, nor a negative value
     useEffect(()=>{
         if(aposta < fichasJogador){
             if(aposta + novaAposta < 0){
@@ -64,6 +75,15 @@ function App() {
         }
     },[novaAposta])
 
+    // Checks wether the player has won something
+    useEffect(()=>{
+        if(resultado === "Venceu" && fim){
+            setGanhos(aposta*2);
+        }
+        else if(resultado === "Perdeu " && fim)
+            setAposta(0);
+    },[resultado,fim])
+
     function pegarNovaCarta(){
         if(!fim && cartas[0] !== 0){
         setCartas([...cartas,novaCarta()]);
@@ -78,7 +98,6 @@ function App() {
             setFim(true);
             setApostou(false);
         }
-
         else if(soma === 21 && somaDealer !== 21){
             setResultado("Blackjack!");
             setGanhos(aposta*3);
@@ -102,14 +121,6 @@ function App() {
             setResultado("Perdeu ");
         }
     }
-
-    useEffect(()=>{
-        if(resultado === "Venceu" && fim){
-            setGanhos(aposta*2);
-        }
-        else if(resultado === "Perdeu " && fim)
-            setAposta(0);
-    },[resultado,fim])
 
     function iniciarPartida() {
         if(aposta > 0){
