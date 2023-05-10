@@ -21,7 +21,7 @@ function App() {
     const [apostou, setApostou] = useState(false);
     const [fim,setFim] = useState(false);
 
-    const [fichasJogador,setFichasJogador] = useState(200);
+    const [fichasJogador,setFichasJogador] = useState(100);
     const [aposta,setAposta] = useState(0);
     const [novaAposta,setNovaAposta] = useState(0);
     const [ganhos,setGanhos] = useState(0);
@@ -33,6 +33,10 @@ function App() {
 
     useEffect(()=>{
         compararSomas();
+        if(somaDealer < 17){
+            setCartasDealer([...cartasDealer,novaCarta()]);
+            setSomaDealer(cartasDealer.reduce((accumulator, currentValue) => accumulator + currentValue, 0));
+        }
     },[soma,somaDealer])
     //incluindo o fim acima, vencer maior soma funciona
     // mas
@@ -109,7 +113,7 @@ function App() {
             setGanhos(aposta)
             setApostou(false);
         }
-        else if(soma > somaDealer){
+        else if(soma > somaDealer || somaDealer > 21){
             setResultado("Venceu")
             // console.log("venceu,soma maior fim:",fim)
             // aqui o fim ta como false mesmo apos apertar o botao de finalizar
@@ -231,7 +235,6 @@ function App() {
                 setApostou(false)
             }}>Finalizar</button>
         </div>
-
       </div>
     );
 }
