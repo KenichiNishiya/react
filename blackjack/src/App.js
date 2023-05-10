@@ -109,6 +109,7 @@ function App() {
         }
         else if(soma === 21 && somaDealer === 21){
             setResultado("Empate")
+            setFim(true)
             // setFichasJogador((fichasJogador)=>fichasJogador + aposta);
             setGanhos(aposta)
             setApostou(false);
@@ -193,7 +194,7 @@ function App() {
     // })
 
     return (
-      <div style={{backgroundImage: `url(${background})`,
+      <div className='appDiv' style={{backgroundImage: `url(${background})`,
                 backgroundRepeat: "no-repeat",
               backgroundPosition:"center",
                 backgroundSize: "cover",
@@ -209,22 +210,21 @@ function App() {
             <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
         </div>
 
-        <br/>
 
-        <p>Sua aposta: {aposta}</p>
-        <p>Suas fichas: {fichasJogador}</p>
+        <div id='divStats'>
+            <p className='p'>Sua aposta: {aposta}</p>
+            <p className='p'>Suas fichas: {fichasJogador}</p>
+        </div>
 
         <div className='divAposta'>
             <button className='buttonAposta' onClick={()=>{apostar(5)}}>+5</button>
             <button className='buttonAposta' onClick={()=>{apostar(10)}}>+10</button>
             <button className='buttonAposta' onClick={()=>{apostar(50)}}>+50</button>
-        <br/>
             <button className='buttonAposta' onClick={()=>{apostar(-5)}}>-5</button>
             <button className='buttonAposta' onClick={()=>{apostar(-10)}}>-10</button>
             <button className='buttonAposta' onClick={()=>{apostar(-50)}}>-50</button>
         </div>
 
-        <br/>
         <br/>
 
         <div className='divButton'>
@@ -243,8 +243,8 @@ const Jogador = (props) =>{
     return(
         <div className='jogador'>
             <h1>Jogador</h1>
-            <p>Cartas: {props.cartas.join(", ")}</p>
-            <p>Soma: {props.soma}</p>
+            <p className='p'>Cartas: {props.cartas.join(", ")}</p>
+            <p className='p'>Soma: {props.soma}</p>
         </div>
     )
 }
@@ -255,14 +255,14 @@ const Dealer = (props) =>{
         {props.fim ? 
             <div>
             <h1>Dealer</h1>
-            <p>Cartas: {props.cartasDealer.join(", ")}</p>
-            <p>Soma: {props.somaDealer}</p>
+            <p className='p'>Cartas: {props.cartasDealer.join(", ")}</p>
+            <p className='p'>Soma: {props.somaDealer}</p>
             </div>
             :
             <div>
             <h1>Dealer</h1>
-            <p>Cartas: {props.cartasDealer[0]}, ?</p>
-            <p>Soma: ?</p>
+            <p className='p'>Cartas: {props.cartasDealer[0]}, ?</p>
+            <p className='p'>Soma: ?</p>
             </div>
         }
             
