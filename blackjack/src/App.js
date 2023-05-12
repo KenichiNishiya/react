@@ -123,7 +123,7 @@ function App() {
     }
 
     function iniciarPartida() {
-        if(aposta > 0){
+        if(aposta > 0 && fichasJogador > 0){
             setApostou(true);
             setFim(false);
             const cartasIniciais = [novaCarta(),novaCarta()];
