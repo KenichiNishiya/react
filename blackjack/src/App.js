@@ -1,5 +1,7 @@
 import { useState,useEffect } from 'react';
 import './App.css';
+import {Jogador} from './Jogador'
+import {Dealer} from './Dealer'
 import background from './bg.jpeg'
 
 // TODO
@@ -208,32 +210,4 @@ function App() {
     );
 }
 
-    const Jogador = (props) =>{
-        return(
-            <div className='jogador'>
-                <h1>Jogador</h1>
-                <p className='p'>Cartas: {props.cartas.join(", ")}</p>
-                <p className='p'>Soma: {props.soma}</p>
-            </div>
-        )
-    }
-
-    const Dealer = (props) =>{
-        return(
-            <div className='dealer'>
-            {props.fim ? 
-                <div>
-                <h1>Dealer</h1>
-                <p className='p'>Cartas: {props.cartasDealer.join(", ")}</p>
-                <p className='p'>Soma: {props.somaDealer}</p>
-                </div>
-                : <div>
-                <h1>Dealer</h1>
-                <p className='p'>Cartas: {props.cartasDealer[0]}, ?</p>
-                <p className='p'>Soma: ?</p>
-                </div>
-            }
-            </div>
-        )
-    }
-    export default App;
+export default App;
