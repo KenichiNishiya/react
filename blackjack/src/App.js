@@ -3,7 +3,6 @@ import './App.css';
 import background from './bg.jpeg'
 
 // TODO
-// consertar 2 blackjack seguido o segundo nao vai
 
 // Setting some css for the whole page directly with js
 document.body.style = "font-size:20px; font-weight: bold; color: white; text-align: center;    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;";
@@ -80,8 +79,9 @@ function App() {
         if(resultado === "Venceu" && fim){
             setGanhos(aposta*2);
         }
-        else if(resultado === "Perdeu " && fim)
-            setAposta(0);
+        else if(resultado === "Empate" && fim){
+            setGanhos(aposta);
+        }
     },[resultado,fim])
 
     function pegarNovaCarta(){
@@ -104,11 +104,18 @@ function App() {
             setFim(true);
             setApostou(false);
         }
-        else if(soma === 21 && somaDealer === 21 || soma === somaDealer){
+        else if(soma === 21 && somaDealer === 21){
             setResultado("Empate");
             setFim(true);
             setGanhos(aposta);
             setApostou(false);
+        }
+        else if(soma === somaDealer && soma !== 0){
+            setResultado("Empate");
+            if(fim){
+                setGanhos(aposta);
+                setApostou(false);
+            }
         }
         else if(soma > somaDealer || somaDealer > 21){
             setResultado("Venceu");
@@ -124,6 +131,7 @@ function App() {
 
     function iniciarPartida() {
         if(aposta > 0 && fichasJogador > 0){
+            setResultado("");
             setApostou(true);
             setFim(false);
             const cartasIniciais = [novaCarta(),novaCarta()];
@@ -218,8 +226,7 @@ function App() {
                 <p className='p'>Cartas: {props.cartasDealer.join(", ")}</p>
                 <p className='p'>Soma: {props.somaDealer}</p>
                 </div>
-                :
-                <div>
+                : <div>
                 <h1>Dealer</h1>
                 <p className='p'>Cartas: {props.cartasDealer[0]}, ?</p>
                 <p className='p'>Soma: ?</p>
