@@ -78,9 +78,13 @@ function App() {
     useEffect(()=>{
         if(resultado === "Venceu" && fim){
             setGanhos(aposta*2);
+            setApostou(false);
         }
         else if(resultado === "Empate" && fim){
             setGanhos(aposta);
+        }
+        else if(resultado === "Perdeu " && fim){
+            setAposta(0);
         }
     },[resultado,fim])
 
@@ -119,13 +123,10 @@ function App() {
         }
         else if(soma > somaDealer || somaDealer > 21){
             setResultado("Venceu");
-            if(fim){
-                setGanhos(aposta*2);
-                setApostou(false);
-            }
         }
         else if(soma < somaDealer){
             setResultado("Perdeu ");
+            setApostou(false);
         }
     }
 
