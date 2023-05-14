@@ -104,7 +104,7 @@ function App() {
             setFim(true);
             setApostou(false);
         }
-        else if(soma === 21 && somaDealer === 21){
+        else if(soma === 21 && somaDealer === 21 || soma === somaDealer){
             setResultado("Empate");
             setFim(true);
             setGanhos(aposta);
@@ -117,7 +117,7 @@ function App() {
                 setApostou(false);
             }
         }
-        else if(soma < somaDealer || soma === somaDealer){
+        else if(soma < somaDealer){
             setResultado("Perdeu ");
         }
     }
