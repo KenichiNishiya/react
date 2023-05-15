@@ -99,10 +99,36 @@ function App() {
 
     function compararSomas(){
         if(soma > 21){
+            if(cartas.indexOf(11) !== -1){
+                setCartas(cartas.map((card)=>{
+                    if(card == 11){
+                        return 1;
+                    }
+                    else{
+                        return card;
+                    }
+                }));
+            }
+        else if(somaDealer > 21){
+            if(cartasDealer.indexOf(11) !== -1){
+                setCartasDealer(cartasDealer.map((cardDealer)=>{
+                    if(cardDealer == 11){
+                        return 1;
+                    }
+                    else{
+                        return cardDealer;
+                    }
+                }));
+            }
+        }
+
+        else{
             setResultado("Perdeu");
             setAposta(0);
             setFim(true);
             setApostou(false);
+
+            }
         }
         else if(soma === 21 && somaDealer !== 21){
             setResultado("Blackjack!");
