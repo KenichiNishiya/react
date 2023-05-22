@@ -101,7 +101,7 @@ function App() {
         if(soma > 21){
             if(cartas.indexOf(11) !== -1){
                 setCartas(cartas.map((card)=>{
-                    if(card == 11){
+                    if(card === 11){
                         return 1;
                     }
                     else{
@@ -112,7 +112,7 @@ function App() {
         else if(somaDealer > 21){
             if(cartasDealer.indexOf(11) !== -1){
                 setCartasDealer(cartasDealer.map((cardDealer)=>{
-                    if(cardDealer == 11){
+                    if(cardDealer === 11){
                         return 1;
                     }
                     else{
@@ -208,7 +208,7 @@ function App() {
             <h1 className='h1'>Blackjack</h1>
             <br/>
             <div className='wrapper'>
-                <Jogador cartas={cartas} soma={soma}/>
+                <Jogador cartas={cartas} soma={soma} alteraCartas={setCartas}/>
                 {fim && <p className='res'>{resultado}</p>}
                 <Dealer fim={fim} cartasDealer={cartasDealer} somaDealer={somaDealer}/>
             </div>
