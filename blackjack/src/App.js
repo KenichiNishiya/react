@@ -4,8 +4,6 @@ import {Jogador} from './Jogador'
 import {Dealer} from './Dealer'
 import background from './bg.jpeg'
 
-// TODO
-
 // Setting some css for the whole page directly with js
 document.body.style = "font-size:20px; font-weight: bold; color: white; text-align: center;    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;";
 
@@ -29,6 +27,10 @@ function App() {
     const [aposta,setAposta] = useState(0);
     const [novaAposta,setNovaAposta] = useState(0);
     const [ganhos,setGanhos] = useState(0);
+
+    useEffect(()=>{
+        document.title='Blackjack';
+    },[]);
 
     // When the cards are updated, the sums is also updated
     useEffect(() => {
