@@ -1,0 +1,22 @@
+header {
+margin: 64px;
+background-color: #0c3809;
+text-align: left;
+border-color: rgba(253, 166, 4, 0.747);
+}
+body{
+margin:0px;
+border-style: double;
+border-radius: 22px;
+border-width: 30px 50px;
+border-color: rgba(253, 166, 4, 0.747);
+background-color: #0c3809;
+}
+h2{
+text-align: center;
+font-size: 45px;
+}
+code {
+font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+monospace;
+}
